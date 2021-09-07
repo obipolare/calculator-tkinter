@@ -1,5 +1,5 @@
 from tkinter import *
-import parser
+import ast 
 
 root = Tk()
 root.title("Calculadora")
@@ -43,13 +43,17 @@ def undo():
 def calculate():
     display_state = display.get()
     try:
-      math_expression =  parser.expr(display_state).compile()
-      res = eval(math_expression)
+    # math_expression = parser.expr(display_state).compile()
+    # res = eval(math_expression)
+
+      math_expression = ast.parse(display_state, mode="eval")
+      result  = eval(compile(math_expression, '', mode="eval"))
       clear_display()
-      display.insert(0, res)
+
+      display.insert(0, result)
     except Exception as e:
         clear_display()
-        display.insert(0, "Error")
+        display.insert(0, 'Error')
        
 
 # def createButton(textContent, row, col):
@@ -87,11 +91,6 @@ Button(root, text="^2", command=lambda: get_operations("**2")).grid(row=3, colum
 Button(root, text="(", command=lambda: get_operations("(")).grid(row=4, column=4, sticky=W+E)
 Button(root, text=")", command=lambda: get_operations(")")).grid(row=4, column=5, sticky=W+E)
 Button(root, text="=", command=lambda: calculate()).grid(row=5, column=4, sticky=W+E, columnspan=2)
-
-
-
-
-
 
 
 root.mainloop()
